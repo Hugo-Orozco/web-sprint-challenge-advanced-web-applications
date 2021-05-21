@@ -1,5 +1,7 @@
 import React, { useState } from "react";
-import axios from "axios";
+
+import Color from './Color';
+import EditMenu from './EditMenu';
 
 const initialColor = {
   color: "",
@@ -17,10 +19,15 @@ const ColorList = ({ colors, updateColors }) => {
 
   const saveEdit = e => {
     e.preventDefault();
-
+    const temp = colors;
+    const index = temp.findIndex(color => color.id === colorToEdit.id);
+    temp.splice(index, 1, colorToEdit);
+    updateColors([...temp]);
   };
 
   const deleteColor = color => {
+    const filtered = colors.filter(arrayColor => arrayColor.id != color.id);
+    updateColors([...filtered]);
   };
 
   return (
@@ -29,7 +36,7 @@ const ColorList = ({ colors, updateColors }) => {
       <ul>
         {colors.map(color => <Color key={color.id} editing={editing} color={color} editColor={editColor} deleteColor={deleteColor}/>)}
       </ul>
-      
+
       { editing && <EditMenu colorToEdit={colorToEdit} saveEdit={saveEdit} setColorToEdit={setColorToEdit} setEditing={setEditing}/> }
 
     </div>

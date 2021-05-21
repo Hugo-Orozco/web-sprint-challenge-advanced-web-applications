@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import Axios from 'axios';
 
 import Bubbles from "./Bubbles";
 import ColorList from "./ColorList";
@@ -6,8 +7,23 @@ import ColorList from "./ColorList";
 const BubblePage = () => {
   const [colorList, setColorList] = useState([]);
 
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    Axios.get('http://localhost:5000/api/colors', {
+      headers: {
+        authorization: token
+      }
+    })
+      .then(res => {
+        setColorList([...res.data]);
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  }, []);
+
   return (
-    <div className="container">
+    <div className="container" data-testid='color-list'>
       <ColorList colors={colorList} updateColors={setColorList} />
       <Bubbles colors={colorList} />
     </div>
